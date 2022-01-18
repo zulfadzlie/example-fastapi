@@ -31,11 +31,30 @@ git commit -m "initial commit"
 git branch -M main
 git remote add origin https://github.com/zulfadzlie/example-fastapi.git
 git push -u origin main
+git add --all
+git commit -m "added Procfile"
+git push origin main
+git push heroku main
+
 
 heroku login
 heroku create fastapi-example-20220118
 git push heroku main
 ** make Procfile under local FastAPI folder
+heroku addons:create heroku-postgresql:hobby-dev
+** https://data.heroku.com/datastores/481d9a1c-d4af-4d25-b246-5e17988efe0f#administration
+** https://dashboard.heroku.com/apps/fastapi-example-20220118/settings
+heroku ps:restart
+heroku logs -t
+heroku apps:info fastapi-example-20220118
+
+heroku run "alembic upgrade head"
+heroku ps restart
+
+**after making changes
+git add --all
+git push origin main
+git push heroku main
 
 {{URL}}posts?limit=10&skip=0&search=post1%updated
 
