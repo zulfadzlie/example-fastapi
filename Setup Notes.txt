@@ -1,0 +1,63 @@
+https://www.youtube.com/watch?v=0sOvCWFmrtA&list=WL&index=2&t=5990s
+
+
+virtualenv env
+env\Scripts\activate
+pip install "fastapi[all]"
+uvicorn app.main:app --reload
+pip install psycopg2
+pip install sqlalchemy
+pip install passlib[bcrypt]
+pip install python-jose[cryptography]
+pip install alembic
+alembic init alembic
+modify alembic>versions>env.py (not syntax)
+alembic revision -m "create posts table"
+alembic upgrade 642b3af26060
+alembic revision -m "add content column to post table"
+alembic upgrade 0606b87d6d66 -or- alembic upgrade head
+alembic downgrade 0606b87d6d66 -or- alembic downgrade -1
+alembic revision -m "add user table"
+alembic upgrade head
+alembic revision -m "add foreign key to post table"
+alembic revision -m "add add last few columbs to post table"
+
+pip freeze > requirements.txt
+
+{{URL}}posts?limit=10&skip=0&search=post1%updated
+
+SELECT * from products;
+SELECT name from products;
+SELECT id, name, price from products;
+SELECT id, name, price AS money from products;
+SELECT * FROM products WHERE id = 7;
+SELECT * FROM products WHERE name = 'TV';
+SELECT * FROM products WHERE price >= 20;
+SELECT * FROM products WHERE price > 0 AND inventory > 0;
+SELECT * FROM products WHERE price > 10 OR inventory = 0;
+SELECT * FROM products WHERE id IN (1, 2, 3); --> id = 1 OR id = 2 OR ID = 3
+SELECT * FROM products WHERE name LIKE 'TV%'; --> name start with TV
+SELECT * FROM products WHERE name LIKE '%e'; --> name end with e
+SELECT * FROM products WHERE name NOT LIKE '%en%'; --> name doent have en
+SELECT * FROM products ORDER BY price;
+SELECT * FROM products ORDER BY price DESC;
+SELECT * FROM products ORDER BY inventory DESC price;
+SELECT * FROM products WHERE price > 20 ORDER BY inventory DESC price;
+SELECT * FROM products ORDER BY id LIMIT 5;
+SELECT * FROM products ORDER BY id LIMIT 5 OFFSET 2; skip first 2
+INSERT INTO products (name, price, inventory) VALUES ('Tortilla', 4, 1000);
+INSERT INTO products (name, price, inventory) VALUES ('Car', 4, 10000) returning *;
+DELETE FROM products WHERE id = 10;
+DELETE FROM products WHERE inventory = 0;
+UPDATE products SET name = 'Flour', price = 40 WHERE id = 3;
+UPDATE products SET name = 'Flour', price = 40 WHERE id = 3 RETURNING *;
+UPDATE products SET is_sale = true WHERE id > 3 RETURNING *;
+
+SELECT * FROM posts LEFT JOIN users ON posts.owner_id = users.id;
+SELECT posts.id, email FROM posts LEFT JOIN users ON posts.owner_id = users.id;
+SELECT users.id, COUNT(*) FROM posts LEFT JOIN users ON posts.owner_id = users.id GROUP BY users.id;
+SELECT * FROM posts RIGHT JOIN users ON posts.owner_id = users.id;
+SELECT users.id, COUNT(posts.id) FROM posts RIGHT JOIN users ON posts.owner_id = users.id GROUP BY users.id;
+
+SELECT posts.*, COUNT(votes.post_id) as votes FROM posts LEFT JOIN votes ON posts.id = votes.post_id GROUP BY posts.id;
+SELECT posts.*, COUNT(votes.post_id) as votes FROM posts LEFT JOIN votes ON posts.id = votes.post_id WHERE posts.id = 1 GROUP BY posts.id;
